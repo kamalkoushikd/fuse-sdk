@@ -8,8 +8,8 @@ name: Publish to PyPI
 # from fuse-nw at build time, + the wolfSSL it was built against), so
 # `pip install fuse-sdk` needs no compiler, no CMake, and no system wolfSSL.
 #
-# Publishing uses PyPI Trusted Publishing (OIDC) — there is no API token to
-# create or rotate. One-time setup on PyPI (not done yet — this workflow is
+# Publishing uses PyPI Trusted Publishing (OIDC), there is no API token to
+# create or rotate. One-time setup on PyPI (not done yet, this workflow is
 # inert until someone with PyPI access does this):
 #
 #   pypi.org -> Your projects -> Publishing -> Add a pending publisher
@@ -48,7 +48,7 @@ jobs:
       # The bindings are ctypes, not a C extension, so the wheel carries no
       # CPython ABI and one build covers every interpreter (py3-none-*).
       # Building it under a single Python is therefore sufficient, not a
-      # compromise — see wheel.py-api in pyproject.toml.
+      # compromise, see wheel.py-api in pyproject.toml.
       - name: Build the wheel
         uses: pypa/cibuildwheel@v2.21
         env:
