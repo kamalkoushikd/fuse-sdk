@@ -21,7 +21,7 @@ option(FUSE_SDK_BUILD_TESTS "Build the fuse-sdk test suite" ${FUSE_SDK_IS_TOP_LE
 # fuse-nw, as its own fuse_sdk CMake target. Pulling it in via FetchContent
 # rather than duplicating any of it here is the whole point of this repo
 # existing as a thin layer. Bump FUSE_NW_GIT_TAG to track a newer fuse-nw.
-set(FUSE_NW_GIT_TAG "5cdb393411c61b1f40562d34b96d0dfb17397487" CACHE STRING
+set(FUSE_NW_GIT_TAG "35ffa9e7d1284ee07f2151725ad9b14cad9c2a45" CACHE STRING
     "fuse-nw commit/tag this SDK is built against")
 
 include(FetchContent)
