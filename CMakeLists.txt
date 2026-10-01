@@ -21,7 +21,7 @@ option(FUSE_SDK_BUILD_TESTS "Build the fuse-sdk test suite" ${FUSE_SDK_IS_TOP_LE
 # fuse-nw, as its own fuse_sdk CMake target. Pulling it in via FetchContent
 # rather than duplicating any of it here is the whole point of this repo
 # existing as a thin layer. Bump FUSE_NW_GIT_TAG to track a newer fuse-nw.
-set(FUSE_NW_GIT_TAG "9dfa1b3a2ae54814d17e3d703c7cc945527a3e3e" CACHE STRING
+set(FUSE_NW_GIT_TAG "5ff4a9293aa9caee73ac61b18cdb424c0081b432" CACHE STRING
     "fuse-nw commit/tag this SDK is built against")
 
 include(FetchContent)
@@ -35,13 +35,14 @@ FetchContent_Declare(fuse_nw
 FetchContent_MakeAvailable(fuse_nw)
 
 # fuse-nw's own install() rules (brought in above) cover fuse::fuse and
-# fuse::proto but deliberately exclude fuse_sdk and its headers, since that
-# repo's own release is protocol-only. This repo's release is the SDK, so it
-# adds fuse_sdk, sdk.h, transfer.hpp and mux_transfer.hpp to the same install
-# manifest here instead, pulling the headers straight out of the fetched
-# fuse-nw source tree (fuse_nw_SOURCE_DIR) since no copy of them lives here.
+# fuse::proto but deliberately exclude fuse_sdk, fuse_http and their
+# headers, since that repo's own release is protocol-only. This repo's
+# release is the SDK, so it adds those targets and headers to the same
+# install manifest here instead, pulling the headers straight out of the
+# fetched fuse-nw source tree (fuse_nw_SOURCE_DIR) since no copy of them
+# lives here.
 include(GNUInstallDirs)
-install(TARGETS fuse_sdk
+install(TARGETS fuse_sdk fuse_http
     EXPORT fuse-sdk-targets
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
@@ -51,6 +52,7 @@ install(FILES
     "${fuse_nw_SOURCE_DIR}/include/fuse/sdk.h"
     "${fuse_nw_SOURCE_DIR}/include/fuse/transfer.hpp"
     "${fuse_nw_SOURCE_DIR}/include/fuse/mux_transfer.hpp"
+    "${fuse_nw_SOURCE_DIR}/include/fuse/http.h"
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/fuse
 )
 

@@ -3,9 +3,9 @@
 The ergonomic SDK layer for [Fuse](https://github.com/kamalkoushikd/fuse-nw):
 socket-style `listen`/`accept`/`connect`/`send`/`recv` (`fuse/sdk.h`), the
 higher-throughput transfer APIs (`fuse/transfer.hpp`, `fuse/mux_transfer.hpp`),
-and the Python bindings. Split out of fuse-nw so the wire protocol (block
-layer, congestion control, handshake, ...) and the application-facing API can
-evolve and version independently.
+HTTP-over-Fuse (`fuse/http.h`), and the Python bindings. Split out of fuse-nw
+so the wire protocol (block layer, congestion control, handshake, ...) and
+the application-facing API can evolve and version independently.
 
 This repo does not duplicate the protocol: `CMakeLists.txt` pulls fuse-nw in
 via `FetchContent`, pinned to a tracked commit (`FUSE_NW_GIT_TAG`), and links
@@ -27,6 +27,25 @@ Full guide: [`docs/SDK.md`](docs/SDK.md) (socket-style API), or
 [`docs/USAGE.md`](docs/USAGE.md) for the higher-throughput buffer/file
 transfer API.
 
+## HTTP over Fuse
+
+```c
+#include <fuse/http.h>
+
+fuse_http_request req = {"GET", "/", "", nullptr, 0};
+fuse_http_response resp;
+fuse_http_fetch(&cfg, &req, &resp, 5000);
+printf("%d %s\n", resp.status, resp.reason);
+fuse_http_response_free(&resp);
+```
+
+One request, one response, one Fuse message each way (no keep-alive or
+pipelining yet, each connection is good for exactly one exchange). Discovery
+is Alt-Svc-style, token `hfuse-00`, versioning this mapping independently of
+the underlying wire protocol. See `fuse/http.h`'s own comments (in
+[fuse-nw](https://github.com/kamalkoushikd/fuse-nw)) for the exact wire
+format and the reasoning behind it.
+
 ## Build from source
 
 ```sh
@@ -43,9 +62,9 @@ GitHub release ships.
 
 ## Python packaging
 
-CI (`.github/workflows/publish-python.yml`) builds and can publish wheels,
-but publishing is inert until a PyPI trusted publisher is configured for this
-repo (see the workflow file's header comment), not done yet.
+`pip install fuse-sdk` is live on PyPI (both x86_64 and aarch64 wheels, plus
+an sdist). CI (`.github/workflows/publish-python.yml`) builds and publishes
+on a version tag.
 
 ## Status
 

@@ -14,8 +14,9 @@ add_executable(fuse_sdk_tests
     test_sdk.cpp
     test_transfer.cpp
     test_mux_transfer.cpp
+    test_http.cpp
 )
-target_link_libraries(fuse_sdk_tests PRIVATE fuse::sdk GTest::gtest_main)
+target_link_libraries(fuse_sdk_tests PRIVATE fuse::sdk fuse::http GTest::gtest_main)
 
 include(GoogleTest)
 gtest_discover_tests(fuse_sdk_tests)
